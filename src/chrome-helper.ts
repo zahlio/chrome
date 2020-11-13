@@ -279,10 +279,7 @@ export const findSessionForBrowserUrl = async (pathname: string) => {
 
 export const getDebuggingPages = async (trackingId: string | null = null): Promise<ISession[]> => {
   const results = await Promise.all(
-    runningBrowsers.filter((runningBrowser) => {
-      if(trackingId) return runningBrowser._trackingId === trackingId;
-      return true;
-    }).map(async (browser) => {
+    runningBrowsers.filter((browser) => trackingId ? browser._trackingId === trackingId : true).map(async (browser) => {
       const { port } = browser._parsed;
 
       const externalHost = PROXY_HOST ?
