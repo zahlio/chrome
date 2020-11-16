@@ -287,8 +287,8 @@ export class PuppeteerProvider {
     // Catch actual running pages and route them appropriately
     if (route.includes('/devtools/page') && !route.includes(utils.jsonProtocolPrefix)) {
       const session = await chromeHelper.findSessionForPageUrl(route);
-      if (session && session.port) {
-        const { port } = session;
+      if (session && session.browser && session.browser.port) {
+        const { browser: { port }} = session;
         return this.proxyWsRequestToPort({ req, socket, head, port });
       }
       return this.server.rejectSocket({
@@ -301,8 +301,8 @@ export class PuppeteerProvider {
 
     if (route.includes('/devtools/browser')) {
       const session = await chromeHelper.findSessionForBrowserUrl(route);
-      if (session && session.port) {
-        const { port } = session;
+      if (session && session.browser && session.browser.port) {
+        const { browser: { port }} = session;
         return this.proxyWsRequestToPort({ req, socket, head, port });
       }
       return this.server.rejectSocket({

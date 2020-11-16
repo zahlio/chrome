@@ -34,17 +34,28 @@ export interface IBrowser extends puppeteer.Browser {
   _browserServer: BrowserServer | puppeteer.Browser;
 }
 
+export interface ISessionBrowser {
+  id: string;
+  isOpen: boolean;
+  startTime: number;
+  keepalive: number | null;
+  keepaliveTimeoutStartTime: number | null;
+  keepaliveTimeoutTimeLeft: number | null;
+  trackingId: string | null;
+  isUsingTempDataDir: boolean;
+  browserlessDataDir: string | null;
+  browserWSEndpoint: string;
+  port: string;
+}
+
 export interface ISession {
   description: string;
-  devtoolsFrontendUrl: string;
-  id: string;
   title: string;
   type: string;
   url: string;
+  devtoolsFrontendUrl: string;
   webSocketDebuggerUrl: string;
-  port: string;
-  trackingId: string | null;
-  browserWSEndpoint: string;
+  browser: ISessionBrowser;
 }
 
 export interface IWindowSize {

@@ -274,7 +274,7 @@ export const findSessionForPageUrl = async (pathname: string) => {
 export const findSessionForBrowserUrl = async (pathname: string) => {
   const pages = await getDebuggingPages();
 
-  return pages.find((session) => session.browserWSEndpoint.includes(pathname));
+  return pages.find((session) => session.browser.browserWSEndpoint.includes(pathname));
 };
 
 export const getDebuggingPages = async (trackingId: string | null = null, browserId: string | null = null): Promise<ISession[]> => {
@@ -326,17 +326,19 @@ export const getDebuggingPages = async (trackingId: string | null = null, browse
           });
 
           return {
-            session: {
-              ...session,
-              webSocketDebuggerUrl,
-              devtoolsFrontendUrl,
-            },
+            description: session.description,
+            title: session.title,
+            type: session.type,
+            url: session.url,
+            devtoolsFrontendUrl,
+            webSocketDebuggerUrl,
             browser: {
               id: browser._id,
               isOpen: browser._isOpen,
               startTime: browser._startTime,
               keepalive: browser._keepalive,
               keepaliveTimeoutStartTime: browser._keepaliveTimeoutStartTime,
+              keepaliveTimeoutTimeLeft: (browser._keepalive && browser._keepaliveTimeoutStartTime) ? ((browser._keepaliveTimeoutStartTime + browser._keepalive) - Date.now()) : null,
               trackingId: browser._trackingId,
               isUsingTempDataDir: browser._isUsingTempDataDir,
               browserlessDataDir: browser._browserlessDataDir,
