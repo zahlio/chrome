@@ -281,9 +281,8 @@ export const getDebuggingPages = async (trackingId: string | null = null, browse
   const results = await Promise.all(
     runningBrowsers.filter((browser) => {
       let found:boolean = true;
-      if (trackingId) found = browser._trackingId?.includes(trackingId) || false;
-      if (browserId) found = browser._id === browserId;
-
+      if (trackingId) found = browser._trackingId === trackingId || false;
+      if (browserId) found = browser._id === browserId || false;
       return found;
     }).map(async (browser) => {
       const { port } = browser._parsed;
@@ -337,7 +336,7 @@ export const getDebuggingPages = async (trackingId: string | null = null, browse
               isOpen: browser._isOpen,
               startTime: browser._startTime,
               keepalive: browser._keepalive,
-              keepaliveTimeLeft: browser._keepaliveTimeout ? (browser._keepaliveTimeout?._idleStart + browser._keepaliveTimeout?._idleTimeout - Date.now()) : null,
+              keepaliveTimeoutStartTime: browser._keepaliveTimeoutStartTime,
               trackingId: browser._trackingId,
               isUsingTempDataDir: browser._isUsingTempDataDir,
               browserlessDataDir: browser._browserlessDataDir,

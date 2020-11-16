@@ -20,6 +20,7 @@ export interface IBrowser extends puppeteer.Browser {
   _isUsingTempDataDir: boolean;
   _keepalive: number | null;
   _keepaliveTimeout: NodeJS.Timeout | null;
+  _keepaliveTimeoutStartTime: number | null;
   _parsed: url.UrlWithParsedQuery;
   _trackingId: string | null;
   _browserlessDataDir: string | null;

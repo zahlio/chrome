@@ -556,6 +556,7 @@ export class PuppeteerProvider {
       browser._keepaliveTimeout && clearTimeout(browser._keepaliveTimeout);
       jobdebug(`${job.id}: Browser marked as keep-alive, closing in ${browser._keepalive}ms`);
       browser._keepaliveTimeout = setTimeout(closeChrome, browser._keepalive);
+      browser._keepaliveTimeoutStartTime = Date.now();
       return;
     }
 
