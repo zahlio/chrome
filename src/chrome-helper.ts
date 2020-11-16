@@ -277,9 +277,15 @@ export const findSessionForBrowserUrl = async (pathname: string) => {
   return pages.find((session) => session.browserWSEndpoint.includes(pathname));
 };
 
-export const getDebuggingPages = async (trackingId: string | null = null): Promise<ISession[]> => {
+export const getDebuggingPages = async (trackingId: string | null = null, browserId: string | null = null): Promise<ISession[]> => {
   const results = await Promise.all(
-    runningBrowsers.filter((browser) => trackingId ? browser._trackingId?.includes(trackingId) : true).map(async (browser) => {
+    runningBrowsers.filter((browser) => {
+      let found:boolean = true;
+      if (trackingId) found = browser._trackingId?.includes(trackingId) || false;
+      if (browserId) found = browser._id === browserId;
+
+      return found;
+    }).map(async (browser) => {
       const { port } = browser._parsed;
 
       const externalHost = PROXY_HOST ?
@@ -321,13 +327,23 @@ export const getDebuggingPages = async (trackingId: string | null = null): Promi
           });
 
           return {
-            ...session,
-            browserId: browser._id,
-            browserWSEndpoint,
-            devtoolsFrontendUrl,
-            port,
-            trackingId: browser._trackingId,
-            webSocketDebuggerUrl,
+            session: {
+              ...session,
+              webSocketDebuggerUrl,
+              devtoolsFrontendUrl,
+            },
+            browser: {
+              id: browser._id,
+              isOpen: browser._isOpen,
+              startTime: browser._startTime,
+              keepalive: browser._keepalive,
+              keepaliveTimeLeft: browser._keepaliveTimeout ? (browser._keepaliveTimeout._idleStart + browser._keepaliveTimeout._idleTimeout - Date.now()) : null,
+              trackingId: browser._trackingId,
+              isUsingTempDataDir: browser._isUsingTempDataDir,
+              browserlessDataDir: browser._browserlessDataDir,
+              browserWSEndpoint,
+              port
+            }
           };
         });
     }),
