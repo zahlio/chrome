@@ -337,7 +337,7 @@ export const getDebuggingPages = async (trackingId: string | null = null, browse
               isOpen: browser._isOpen,
               startTime: browser._startTime,
               keepalive: browser._keepalive,
-              keepaliveTimeLeft: browser._keepaliveTimeout ? (browser._keepaliveTimeout._idleStart + browser._keepaliveTimeout._idleTimeout - Date.now()) : null,
+              keepaliveTimeLeft: browser._keepaliveTimeout ? (browser._keepaliveTimeout?._idleStart + browser._keepaliveTimeout?._idleTimeout - Date.now()) : null,
               trackingId: browser._trackingId,
               isUsingTempDataDir: browser._isUsingTempDataDir,
               browserlessDataDir: browser._browserlessDataDir,
