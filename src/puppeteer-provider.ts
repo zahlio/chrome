@@ -524,6 +524,10 @@ export class PuppeteerProvider {
       return browser.close();
     }
 
+    const randomNumber = (min:number, max:number):number => {
+      return Math.floor(Math.random() * (max - min) + min);
+    }
+
     const closeChrome = async () => {
       jobdebug(`${job.id}: Browser not needed, closing`);
       await chromeHelper.closeBrowser(browser);
@@ -537,10 +541,15 @@ export class PuppeteerProvider {
     };
 
     if (this.keepChromeInstance) {
-      const timeAlive = Date.now() - browser._startTime;
-      jobdebug(`${job.id}: Browser has been alive for ${timeAlive}ms`);
+      if (!browser._prebootChromeRefreshTimeout) {
+        // todo this.config.chromeRefreshTime
+        browser._prebootChromeRefreshTimeout = randomNumber(this.config.prebootChromeRefreshTimeoutStart, this.config.prebootChromeRefreshTimeoutEnd);
+      }
 
-      if (timeAlive <= this.config.chromeRefreshTime) {
+      const timeAlive = Date.now() - browser._startTime;
+      jobdebug(`${job.id}: Browser has been alive for ${timeAlive}ms (${browser._prebootChromeRefreshTimeout === 0 ? 'infinity' : browser._prebootChromeRefreshTimeout}ms timeout)`);
+
+      if (timeAlive <= browser._prebootChromeRefreshTimeout || browser._prebootChromeRefreshTimeout === 0) {
         jobdebug(`${job.id}: Pushing browser back into swarm, clearing pages`);
         const [blank, ...pages] = await browser.pages();
         pages.forEach((page) => page.close());
@@ -555,7 +564,7 @@ export class PuppeteerProvider {
     if (browser._keepalive) {
       browser._keepaliveTimeout && clearTimeout(browser._keepaliveTimeout);
       jobdebug(`${job.id}: Browser marked as keep-alive, closing in ${browser._keepalive}ms`);
-      browser._keepaliveTimeout = setTimeout(closeChrome, browser._keepalive);
+        browser._keepaliveTimeout = setTimeout(closeChrome, browser._keepalive);
       browser._keepaliveTimeoutStartTime = Date.now();
       return;
     }
@@ -566,8 +575,7 @@ export class PuppeteerProvider {
   private async getChrome(opts: ILaunchOptions): Promise<IBrowser> {
     const browser: Promise<IBrowser> = new Promise(async (resolve) => {
       const canUseChromeSwarm = (
-        this.config.prebootChrome
-        // utils.canPreboot(opts, chromeHelper.defaultLaunchArgs)
+        this.config.prebootChrome && (this.config.prebootChromeIgnoreArgs || utils.canPreboot(opts, chromeHelper.defaultLaunchArgs))
       );
 
       sysdebug(`Using pre-booted chrome: ${canUseChromeSwarm}`);

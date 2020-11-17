@@ -19,6 +19,7 @@ export interface IBrowser extends puppeteer.Browser {
   _isOpen: boolean;
   _isUsingTempDataDir: boolean;
   _keepalive: number | null;
+  _prebootChromeRefreshTimeout: number | null;
   _keepaliveTimeout: NodeJS.Timeout | null;
   _keepaliveTimeoutStartTime: number | null;
   _parsed: url.UrlWithParsedQuery;
@@ -159,6 +160,9 @@ export interface IChromeServiceConfiguration {
   maxConcurrentSessions: number;
   maxQueueLength: number;
   prebootChrome: boolean;
+  prebootChromeIgnoreArgs: boolean;
+  prebootChromeRefreshTimeoutStart: number;
+  prebootChromeRefreshTimeoutEnd: number;
   demoMode: boolean;
   functionExternals: string[];
   functionEnableIncognitoMode: boolean;

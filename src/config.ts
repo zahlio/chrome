@@ -98,6 +98,9 @@ export const DEFAULT_USER_DATA_DIR: string | undefined = process.env.DEFAULT_USE
   untildify(process.env.DEFAULT_USER_DATA_DIR) :
   undefined;
 export const PREBOOT_CHROME: boolean = parseJSONParam(process.env.PREBOOT_CHROME, false);
+export const PREBOOT_CHROME_IGNORE_ARGS: boolean = parseJSONParam(process.env.PREBOOT_CHROME_IGNORE_ARGS, false);
+export const PREBOOT_CHROME_REFRESH_TIMEOUT_START: number = parseNumber(process.env.PREBOOT_CHROME_REFRESH_TIMEOUT_START, thirtyMinutes);
+export const PREBOOT_CHROME_REFRESH_TIMEOUT_END: number = parseNumber(process.env.PREBOOT_CHROME_REFRESH_TIMEOUT_END, thirtyMinutes);
 
 // Security and accessibility
 export const DEBUG: string | undefined = getDebug();
