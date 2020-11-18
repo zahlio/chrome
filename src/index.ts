@@ -25,6 +25,7 @@ const browserless = new BrowserlessServer({
   metricsJSONPath: config.METRICS_JSON_PATH,
   port: config.PORT,
   prebootChrome: config.PREBOOT_CHROME,
+  prebootChromeCleanup: config.PREBOOT_CHROME_CLEANUP,
   prebootChromeIgnoreArgs: config.PREBOOT_CHROME_IGNORE_ARGS,
   prebootChromeRefreshTimeoutStart: config.PREBOOT_CHROME_REFRESH_TIMEOUT_START,
   prebootChromeRefreshTimeoutEnd: config.PREBOOT_CHROME_REFRESH_TIMEOUT_END,

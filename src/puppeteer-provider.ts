@@ -529,13 +529,13 @@ export class PuppeteerProvider {
     }
 
     const closeChrome = async () => {
-      jobdebug(`${job.id}: Browser not needed, closing`);
+      jobdebug(`${job.id}: Browser not needed, closing.`);
       await chromeHelper.closeBrowser(browser);
 
       jobdebug(`${job.id}: Browser cleanup complete.`);
 
       if (this.config.prebootChrome && browser._prebooted) {
-        sysdebug(`Adding to Chrome swarm`);
+        sysdebug(`Adding to Chrome swarm.`);
         return this.chromeSwarm.push(this.launchChrome(chromeHelper.defaultLaunchArgs, true));
       }
     };
@@ -550,11 +550,16 @@ export class PuppeteerProvider {
       jobdebug(`${job.id}: Browser has been alive for ${timeAlive}ms (${browser._prebootChromeRefreshTimeout === 0 ? 'infinity' : browser._prebootChromeRefreshTimeout}ms timeout)`);
 
       if (timeAlive <= browser._prebootChromeRefreshTimeout || browser._prebootChromeRefreshTimeout === 0) {
-        jobdebug(`${job.id}: Pushing browser back into swarm, clearing pages`);
-        const [blank, ...pages] = await browser.pages();
-        pages.forEach((page) => page.close());
-        blank && blank.goto('about:blank');
-        jobdebug(`${job.id}: Cleanup done, pushing into swarm.`);
+        if(this.config.prebootChromeCleanup) {
+          jobdebug(`${job.id}: Pushing browser back into swarm, clearing pages.`);
+          const [blank, ...pages] = await browser.pages();
+          pages.forEach((page) => page.close());
+          blank && blank.goto('about:blank');
+          jobdebug(`${job.id}: Cleanup done, pushing into swarm.`);
+        } else {
+          jobdebug(`${job.id}: Pushing browser back into swarm.`);
+        }
+
         return this.chromeSwarm.push(Promise.resolve(browser));
       }
     }

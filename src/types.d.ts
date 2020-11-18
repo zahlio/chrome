@@ -160,6 +160,7 @@ export interface IChromeServiceConfiguration {
   maxConcurrentSessions: number;
   maxQueueLength: number;
   prebootChrome: boolean;
+  prebootChromeCleanup: boolean;
   prebootChromeIgnoreArgs: boolean;
   prebootChromeRefreshTimeoutStart: number;
   prebootChromeRefreshTimeoutEnd: number;
