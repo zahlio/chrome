@@ -257,7 +257,7 @@ export const defaultLaunchArgs = {
   slowMo: undefined,
   userDataDir: DEFAULT_USER_DATA_DIR,
   playwright: false,
-  stealth: false,
+  stealth: DEFAULT_STEALTH,
 };
 
 /*
