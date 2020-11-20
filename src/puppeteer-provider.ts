@@ -124,7 +124,7 @@ export class PuppeteerProvider {
     }
 
     if (!this.queue.hasCapacity) {
-      jobdebug(`${jobId}: Too many concurrent and queued requests, rejecting with 429.`);
+      jobdebug(`${jobId}: Too many concurrent and queued requests (${this.queue.length}), rejecting with 429.`);
       return this.server.rejectReq(req, res, 429, `Too Many Requests`, this.server.capacityFullHook);
     }
 
@@ -324,7 +324,7 @@ export class PuppeteerProvider {
     }
 
     if (!this.queue.hasCapacity) {
-      jobdebug(`${jobId}: Too many concurrent and queued requests, rejecting with 429.`);
+      jobdebug(`${jobId}: Too many concurrent and queued requests (${this.queue.length}), rejecting with 429.`);
       return this.server.rejectSocket({
         header: `HTTP/1.1 429 Too Many Requests`,
         message: `Too Many Requests`,
